@@ -24,6 +24,7 @@
   let choiceOne: Card | null = null
   let choiceTwo: Card | null = null
   let disabled = false
+  let win = false
   
   // shuffle cards
   const shuffleCards = () => {
@@ -32,6 +33,7 @@
     .map((card) => ({ ...card, id: Math.random()}))
     cards = shuffledCards 
     turns = 0
+    win = false
   }
     
   // 	handle a choice
@@ -54,7 +56,7 @@
       resetTurn()				 
     } else {
       console.log('those cards do not match')
-      setTimeout(() => resetTurn(), 1000)		 
+      setTimeout(() => resetTurn(), 1000)
     }
   } 
     
@@ -69,6 +71,8 @@
     choiceTwo = null
     turns = turns + 1	
     disabled = false
+    if(!cards.find(card => !card.matched))
+      setTimeout(() => win = true, 500)
   }
   </script>
   
@@ -77,6 +81,9 @@
     <button on:click={shuffleCards}>
       New Game
     </button>	
+    {#if win}
+      <h2>🎉 Congratulations!</h2>
+    {/if}
     <div class="card-grid">
     {#each cards as card (card.id)}
       <SingleCard 
