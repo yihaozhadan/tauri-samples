@@ -1,6 +1,7 @@
-<script>
+<script lang="ts">
   import SingleCard from './lib/SingleCard.svelte'	
     
+  type Card = { id?: number, src: string, matched: boolean };
   let imgCover = '/images/cover.png';
   let imgHelmet = '/images/helmet-1.png'
   let imgPotion = '/images/potion-1.png'
@@ -9,7 +10,7 @@
   let imgShield = '/images/shield-1.png'
   let imgSword = '/images/sword-1.png'
   
-  const cardImages = [
+  const cardImages: Card[] = [
     { src: imgHelmet, matched: false },
     { src: imgPotion, matched: false },
     { src: imgRing, matched: false },
@@ -18,14 +19,14 @@
     { src: imgSword, matched: false },
   ]
   
-  let cards = []
+  let cards: Card[] = []
   let turns = 0
-  let choiceOne = null
-  let choiceTwo = null
+  let choiceOne: Card | null = null
+  let choiceTwo: Card | null = null
   let disabled = false
   
   // shuffle cards
-  const shuffledCards = () => {
+  const shuffleCards = () => {
     const shuffledCards = [...cardImages, ...cardImages]
     .sort(() => Math.random() - 0.5)
     .map((card) => ({ ...card, id: Math.random()}))
@@ -34,7 +35,7 @@
   }
     
   // 	handle a choice
-  const handleChoice = card => {
+  const handleChoice = (card: Card) => {
     choiceOne ? choiceTwo = card : choiceOne = card
   }	
     
@@ -44,7 +45,7 @@
     if (choiceOne.src === choiceTwo.src) {
       console.log('those cards match')			
       cards = cards.map(card => {
-        if (card.src === choiceOne.src) {
+        if (card.src === choiceOne?.src) {
           return { ...card, matched: true }
         } else {
           return card
@@ -60,7 +61,7 @@
   $: console.log(cards)
   
   // 	start a game automatically
-  $: shuffledCards()
+  $: shuffleCards()
   
   // reset choices & increase turn
   const resetTurn = () => {
@@ -73,7 +74,7 @@
   
   <div class="App">	
     <h1>Match Game</h1>
-    <button on:click={shuffledCards}>
+    <button on:click={shuffleCards}>
       New Game
     </button>	
     <div class="card-grid">
@@ -104,9 +105,9 @@
     padding: 1rem;
     color: white;
   }
-    h1 {
-      color: white;
-    }
+  h1 {
+    color: white;
+  }
   button {
     background: none;
     border: 2px solid #fff;
