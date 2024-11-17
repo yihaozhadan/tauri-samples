@@ -22,7 +22,7 @@ A modern, cross-platform calculator built with Tauri, Svelte, and TypeScript. Th
 
 1. Clone the repository
 ```bash
-git clone [your-repository-url]
+git clone https://github.com/yihaozhadan/tauri-samples.git
 cd calculator
 ```
 
