@@ -48,6 +48,7 @@
     display = result.toString();
     currentNumber = display;
     operator = '';
+    newNumber = true;
   }
 
   function clear() {
