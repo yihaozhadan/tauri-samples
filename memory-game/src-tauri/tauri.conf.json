@@ -1,18 +1,24 @@
 {
-  "productName": "memory-game",
-  "version": "0.0.0",
-  "identifier": "com.github.yihaozhadan.tauri-samples.memory-game",
+  "$schema": "../node_modules/@tauri-apps/cli/schema.json",
+  "productName": "Memory Game",
+  "version": "0.1.0",
+  "identifier": "com.memory-game.dev",
   "build": {
     "beforeDevCommand": "npm run dev",
-    "devUrl": "http://localhost:1420",
+    "devUrl": "http://localhost:5173",
     "beforeBuildCommand": "npm run build",
     "frontendDist": "../dist"
   },
-  "app": {"windows": [
+  "app": {
+    "windows": [
       {
-        "title": "memory-game",
+        "fullscreen": false,
+        "height": 700,
+        "resizable": true,
+        "title": "Memory Game",
         "width": 800,
-        "height": 600
+        "decorations": true,
+        "center": true
       }
     ],
     "security": {
@@ -21,13 +27,36 @@
   },
   "bundle": {
     "active": true,
-    "targets": "all",
+    "category": "Game",
+    "copyright": "",
+    "externalBin": [],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "longDescription": "",
+    "macOS": {
+      "entitlements": null,
+      "exceptionDomain": "",
+      "frameworks": [],
+      "providerShortName": null,
+      "signingIdentity": null
+    },
+    "resources": [],
+    "shortDescription": "",
+    "targets": ["app"],
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "timestampUrl": ""
+    }
+  },
+  "plugins": {
+    "shell": {
+      "open": true
+    }
   }
 }
