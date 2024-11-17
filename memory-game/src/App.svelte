@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import SingleCard from './lib/SingleCard.svelte'	
     
   type Card = { id?: number, src: string, matched: boolean };
@@ -19,12 +21,12 @@
     { src: imgSword, matched: false },
   ]
   
-  let cards: Card[] = []
-  let turns = 0
-  let choiceOne: Card | null = null
-  let choiceTwo: Card | null = null
-  let disabled = false
-  let win = false
+  let cards: Card[] = $state([])
+  let turns = $state(0)
+  let choiceOne: Card | null = $state(null)
+  let choiceTwo: Card | null = $state(null)
+  let disabled = $state(false)
+  let win = $state(false)
   
   // shuffle cards
   const shuffleCards = () => {
@@ -40,30 +42,9 @@
   const handleChoice = (card: Card) => {
     choiceOne ? choiceTwo = card : choiceOne = card
   }	
+     
     
-  // 	compare 2 selected cards
-  $: if (choiceOne && choiceTwo) {
-    disabled = true
-    if (choiceOne.src === choiceTwo.src) {
-      console.log('those cards match')			
-      cards = cards.map(card => {
-        if (card.src === choiceOne?.src) {
-          return { ...card, matched: true }
-        } else {
-          return card
-        }
-      })
-      resetTurn()				 
-    } else {
-      console.log('those cards do not match')
-      setTimeout(() => resetTurn(), 1000)
-    }
-  } 
-    
-  $: console.log(cards)
   
-  // 	start a game automatically
-  $: shuffleCards()
   
   // reset choices & increase turn
   const resetTurn = () => {
@@ -74,11 +55,38 @@
     if(!cards.find(card => !card.matched))
       setTimeout(() => win = true, 500)
   }
-  </script>
+    // 	compare 2 selected cards
+  run(() => {
+    if (choiceOne && choiceTwo) {
+      disabled = true
+      if (choiceOne.src === choiceTwo.src) {
+        console.log('those cards match')			
+        cards = cards.map(card => {
+          if (card.src === choiceOne?.src) {
+            return { ...card, matched: true }
+          } else {
+            return card
+          }
+        })
+        resetTurn()				 
+      } else {
+        console.log('those cards do not match')
+        setTimeout(() => resetTurn(), 1000)
+      }
+    }
+  });
+  run(() => {
+    console.log(cards)
+  });
+  // 	start a game automatically
+  run(() => {
+    shuffleCards()
+  });
+</script>
   
   <div class="App">	
     <h1>Match Game</h1>
-    <button on:click={shuffleCards}>
+    <button onclick={shuffleCards}>
       New Game
     </button>	
     {#if win}
