@@ -1,9 +1,11 @@
-<script>
-    export let card
-    export let imgCover
-    export let handleChoice
-    export let flipped
-    export let disabled
+<script lang="ts">
+    let {
+        card,
+        imgCover,
+        handleChoice,
+        flipped,
+        disabled
+    } = $props();
     
     const handleClick = () => {
         if (!disabled) {
@@ -18,7 +20,7 @@
                 src={card.src} 
                 class="front" 
                 alt="card front" />
-            <button on:click={handleClick} >
+            <button onclick={handleClick} >
                 <img 
                     src={imgCover} 
                     class="back" 
