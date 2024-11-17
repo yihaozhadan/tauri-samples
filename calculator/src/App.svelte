@@ -92,14 +92,27 @@
 </main>
 
 <style>
+  :global(body) {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
   .calculator {
-    width: 300px;
-    margin: 50px auto;
-    background: #ffffff;
-    border-radius: 10px;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
     padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+    box-sizing: border-box;
     transition: all 0.3s ease;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 
   .calculator.dark {
@@ -135,11 +148,12 @@
     color: #333;
     padding: 20px;
     text-align: right;
-    font-size: 24px;
+    font-size: 32px;
     margin-bottom: 20px;
-    border-radius: 5px;
+    border-radius: 10px;
     box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
+    font-weight: 300;
   }
 
   .dark .display {
@@ -155,14 +169,16 @@
   }
 
   button {
-    padding: 15px;
-    font-size: 18px;
+    padding: 20px;
+    font-size: 20px;
     border: none;
     background: #f0f0f0;
     color: #333;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s;
+    font-weight: 500;
+    user-select: none;
   }
 
   .dark button {
@@ -172,6 +188,7 @@
 
   button:hover {
     background: #e0e0e0;
+    transform: translateY(-1px);
   }
 
   .dark button:hover {
@@ -180,6 +197,7 @@
 
   button:active {
     background: #d0d0d0;
+    transform: translateY(1px);
   }
 
   .dark button:active {
@@ -193,6 +211,7 @@
   button:nth-child(17) {
     background: #ff9500;
     color: #fff;
+    font-weight: 600;
   }
 
   button:nth-child(5):hover,
@@ -206,6 +225,7 @@
   button:first-child {
     background: #ff3b30;
     color: #fff;
+    font-weight: 600;
   }
 
   button:first-child:hover {
@@ -216,6 +236,7 @@
   button:nth-child(16) {
     background: #34c759;
     color: #fff;
+    font-weight: 600;
   }
 
   button:nth-child(16):hover {
