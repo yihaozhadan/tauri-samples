@@ -189,120 +189,101 @@
 </template>
 
 <script>
+import { ref, computed } from 'vue';
+
 export default {
   name: 'KanbanBoard',
-  data() {
-    return {
-      tasks: [
-        { id: 1, title: 'Task 1', status: 'todo', order: 0 },
-        { id: 2, title: 'Task 2', status: 'todo', order: 1 },
-        { id: 3, title: 'Task 3', status: 'in-progress', order: 0 },
-        { id: 4, title: 'Task 4', status: 'in-progress', order: 1 },
-        { id: 5, title: 'Task 5', status: 'complete', order: 0 },
-      ],
-      draggedTask: null,
-      dragOverTask: null,
-      newTask: {
-        title: '',
-        status: 'todo'
-      },
-      editingTask: null
-    }
-  },
-  computed: {
-    todoTasks() {
-      return this.tasks
-        .filter(task => task.status === 'todo')
-        .sort((a, b) => a.order - b.order)
-    },
-    inProgressTasks() {
-      return this.tasks
-        .filter(task => task.status === 'in-progress')
-        .sort((a, b) => a.order - b.order)
-    },
-    completeTasks() {
-      return this.tasks
-        .filter(task => task.status === 'complete')
-        .sort((a, b) => a.order - b.order)
-    }
-  },
-  methods: {
-    addTask() {
-      if (!this.newTask.title) return;
+  setup() {
+    const tasks = ref([
+      { id: 1, title: 'Task 1', status: 'todo', order: 0 },
+      { id: 2, title: 'Task 2', status: 'todo', order: 1 },
+      { id: 3, title: 'Task 3', status: 'in-progress', order: 0 },
+      { id: 4, title: 'Task 4', status: 'complete', order: 0 }
+    ]);
+    const draggedTask = ref(null);
+    const dragOverTask = ref(null);
+    const newTask = ref({
+      title: '',
+      status: 'todo'
+    });
+    const editingTask = ref(null);
 
-      // Get the highest ID to ensure unique IDs
-      const maxId = Math.max(...this.tasks.map(task => task.id), 0);
-      
-      // Get the highest order in the target column
-      const columnTasks = this.tasks.filter(task => task.status === this.newTask.status);
+    const addTask = () => {
+      if (!newTask.value.title) return;
+
+      const maxId = Math.max(...tasks.value.map(task => task.id), 0);
+      const columnTasks = tasks.value.filter(task => task.status === newTask.value.status);
       const order = columnTasks.length > 0 
         ? Math.max(...columnTasks.map(t => t.order)) + 1 
         : 0;
 
-      // Create new task
       const task = {
         id: maxId + 1,
-        title: this.newTask.title,
-        status: this.newTask.status,
+        title: newTask.value.title,
+        status: newTask.value.status,
         order: order
       };
 
-      // Add task to the list
-      this.tasks.push(task);
+      tasks.value.push(task);
+      newTask.value.title = '';
+      newTask.value.status = 'todo';
+    };
 
-      // Reset form
-      this.newTask.title = '';
-      this.newTask.status = 'todo';
-    },
-    editTask(task) {
-      this.editingTask = { ...task };
-    },
-    cancelEdit() {
-      this.editingTask = null;
-    },
-    saveEdit() {
-      if (!this.editingTask.title) return;
+    const editTask = (task) => {
+      editingTask.value = { ...task };
+    };
 
-      const taskIndex = this.tasks.findIndex(t => t.id === this.editingTask.id);
+    const cancelEdit = () => {
+      editingTask.value = null;
+    };
+
+    const saveEdit = () => {
+      if (!editingTask.value.title) return;
+
+      const taskIndex = tasks.value.findIndex(t => t.id === editingTask.value.id);
       if (taskIndex !== -1) {
-        // If status changed, update order
-        if (this.tasks[taskIndex].status !== this.editingTask.status) {
-          const columnTasks = this.tasks.filter(task => task.status === this.editingTask.status);
-          this.editingTask.order = columnTasks.length > 0 
+        if (tasks.value[taskIndex].status !== editingTask.value.status) {
+          const columnTasks = tasks.value.filter(task => task.status === editingTask.value.status);
+          editingTask.value.order = columnTasks.length > 0 
             ? Math.max(...columnTasks.map(t => t.order)) + 1 
             : 0;
         }
 
-        this.tasks.splice(taskIndex, 1, { ...this.editingTask });
-        this.reorderTasks(this.editingTask.status);
+        tasks.value.splice(taskIndex, 1, { ...editingTask.value });
+        reorderTasks(editingTask.value.status);
       }
 
-      this.editingTask = null;
-    },
-    deleteTask(task) {
+      editingTask.value = null;
+    };
+
+    const deleteTask = (task) => {
       if (confirm('Are you sure you want to delete this task?')) {
-        const taskIndex = this.tasks.findIndex(t => t.id === task.id);
+        const taskIndex = tasks.value.findIndex(t => t.id === task.id);
         if (taskIndex !== -1) {
-          this.tasks.splice(taskIndex, 1);
-          this.reorderTasks(task.status);
+          tasks.value.splice(taskIndex, 1);
+          reorderTasks(task.status);
         }
       }
-    },
-    onDragStart(event, task) {
-      this.draggedTask = task;
+    };
+
+    const onDragStart = (event, task) => {
+      draggedTask.value = task;
       event.target.classList.add('dragging');
-    },
-    onDragEnd(event) {
+    };
+
+    const onDragEnd = (event) => {
       event.target.classList.remove('dragging');
-      this.draggedTask = null;
-      this.dragOverTask = null;
-    },
-    onDragEnter(event, task) {
-      if (task !== this.draggedTask) {
-        this.dragOverTask = task;
+      draggedTask.value = null;
+      dragOverTask.value = null;
+    };
+
+    const onDragEnter = (event, task) => {
+      if (task !== draggedTask.value) {
+        dragOverTask.value = task;
       }
-    },
-    onDragOver(event, status) {
+    };
+
+    const onDragOver = (event, status) => {
       event.preventDefault();
       const taskElement = event.target.closest('.task');
       if (taskElement) {
@@ -311,65 +292,96 @@ export default {
         taskElement.classList.toggle('drop-above', event.clientY < midY);
         taskElement.classList.toggle('drop-below', event.clientY >= midY);
       }
-    },
-    reorderTasks(status) {
-      const statusTasks = this.tasks
+    };
+
+    const reorderTasks = (status) => {
+      const statusTasks = tasks.value
         .filter(task => task.status === status)
         .sort((a, b) => a.order - b.order);
       
       statusTasks.forEach((task, index) => {
-        const taskIndex = this.tasks.findIndex(t => t.id === task.id);
+        const taskIndex = tasks.value.findIndex(t => t.id === task.id);
         if (taskIndex !== -1) {
-          this.tasks[taskIndex].order = index;
+          tasks.value[taskIndex].order = index;
         }
       });
-    },
-    onDrop(event, status) {
+    };
+
+    const onDrop = (event, status) => {
       event.preventDefault();
       
-      if (!this.draggedTask) return;
+      if (!draggedTask.value) return;
 
-      const draggedTaskIndex = this.tasks.findIndex(task => task.id === this.draggedTask.id);
+      const draggedTaskIndex = tasks.value.findIndex(task => task.id === draggedTask.value.id);
       if (draggedTaskIndex === -1) return;
 
-      // Remove drop visual indicators
       document.querySelectorAll('.task').forEach(task => {
         task.classList.remove('drop-above', 'drop-below');
       });
 
       const updatedTask = {
-        ...this.tasks[draggedTaskIndex],
+        ...tasks.value[draggedTaskIndex],
         status: status
       };
 
-      // If dropping in the same column
-      if (this.draggedTask.status === status && this.dragOverTask) {
-        const dropTaskIndex = this.tasks.findIndex(task => task.id === this.dragOverTask.id);
+      if (draggedTask.value.status === status && dragOverTask.value) {
+        const dropTaskIndex = tasks.value.findIndex(task => task.id === dragOverTask.value.id);
         if (dropTaskIndex !== -1) {
           const dropRect = event.target.getBoundingClientRect();
           const dropMiddleY = dropRect.top + dropRect.height / 2;
           
-          // Determine if dropping above or below the target task
           if (event.clientY < dropMiddleY) {
-            updatedTask.order = this.tasks[dropTaskIndex].order - 0.5;
+            updatedTask.order = tasks.value[dropTaskIndex].order - 0.5;
           } else {
-            updatedTask.order = this.tasks[dropTaskIndex].order + 0.5;
+            updatedTask.order = tasks.value[dropTaskIndex].order + 0.5;
           }
         }
       } else {
-        // If dropping in a different column
-        const columnTasks = this.tasks.filter(task => task.status === status);
+        const columnTasks = tasks.value.filter(task => task.status === status);
         updatedTask.order = columnTasks.length > 0 
           ? Math.max(...columnTasks.map(t => t.order)) + 1 
           : 0;
       }
 
-      // Update the task
-      this.tasks.splice(draggedTaskIndex, 1, updatedTask);
+      tasks.value.splice(draggedTaskIndex, 1, updatedTask);
+      reorderTasks(status);
+    };
 
-      // Normalize orders in the affected column
-      this.reorderTasks(status);
-    }
+    const todoTasks = computed(() => tasks.value
+      .filter(task => task.status === 'todo')
+      .sort((a, b) => a.order - b.order)
+    );
+
+    const inProgressTasks = computed(() => tasks.value
+      .filter(task => task.status === 'in-progress')
+      .sort((a, b) => a.order - b.order)
+    );
+
+    const completeTasks = computed(() => tasks.value
+      .filter(task => task.status === 'complete')
+      .sort((a, b) => a.order - b.order)
+    );
+
+    return {
+      tasks,
+      draggedTask,
+      dragOverTask,
+      newTask,
+      editingTask,
+      addTask,
+      editTask,
+      cancelEdit,
+      saveEdit,
+      deleteTask,
+      onDragStart,
+      onDragEnd,
+      onDragEnter,
+      onDragOver,
+      onDrop,
+      todoTasks,
+      inProgressTasks,
+      completeTasks
+    };
   }
 }
 </script>
