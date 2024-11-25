@@ -8,20 +8,29 @@ class SlidePuzzle {
         this.movesElement = document.getElementById('moves');
         this.winMessageElement = document.getElementById('win-message');
         this.newGameButton = document.getElementById('new-game');
+        this.difficultySelect = document.getElementById('difficulty');
         this.initializeGame();
     }
 
     initializeGame() {
         this.isGameWon = false;
         this.winMessageElement.style.display = 'none';
-        // Initialize board with numbers 1-8 and one empty tile (0)
+        this.size = parseInt(this.difficultySelect.value);
+        this.moves = 0;
+        
+        // Initialize board with numbers 1 to size²-1 and one empty tile (0)
         this.board = Array.from({length: this.size * this.size - 1}, (_, i) => i + 1);
         this.board.push(0); // Add the empty tile
         
+        this.updateBoardSize();
         this.shuffleBoard();
         this.renderBoard();
         this.updateMovesDisplay();
         this.setupEventListeners();
+    }
+
+    updateBoardSize() {
+        this.boardElement.className = `puzzle-board size-${this.size}`;
     }
 
     getEmptyPosition() {
@@ -108,16 +117,11 @@ class SlidePuzzle {
     }
 
     checkWin() {
-        // Check first row: 1, 2, 3
-        if (this.board[0] !== 1 || this.board[1] !== 2 || this.board[2] !== 3) return false;
-        
-        // Check second row: 4, 5, 6
-        if (this.board[3] !== 4 || this.board[4] !== 5 || this.board[5] !== 6) return false;
-        
-        // Check third row: 7, 8, empty(0)
-        if (this.board[6] !== 7 || this.board[7] !== 8 || this.board[8] !== 0) return false;
-        
-        return true;
+        // Check if all numbers are in order from 1 to size²-1 and empty tile at the end
+        for (let i = 0; i < this.board.length - 1; i++) {
+            if (this.board[i] !== i + 1) return false;
+        }
+        return this.board[this.board.length - 1] === 0;
     }
 
     renderBoard() {
@@ -148,6 +152,10 @@ class SlidePuzzle {
 
     setupEventListeners() {
         this.newGameButton.addEventListener('click', () => {
+            this.initializeGame();
+        });
+
+        this.difficultySelect.addEventListener('change', () => {
             this.initializeGame();
         });
     }

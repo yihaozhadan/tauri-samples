@@ -19,22 +19,69 @@
             text-align: center;
         }
 
+        .game-controls {
+            margin: 10px 0;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        select#difficulty {
+            padding: 8px;
+            font-size: 1em;
+            border: 2px solid #3498db;
+            border-radius: 4px;
+            background-color: white;
+            color: #2c3e50;
+            cursor: pointer;
+        }
+
+        select#difficulty:hover {
+            border-color: #2980b9;
+        }
+
         .puzzle-board {
             display: grid;
-            grid-template-columns: repeat(3, 100px);
-            grid-template-rows: repeat(3, 100px);
             gap: 5px;
-            background-color: #333;
-            padding: 5px;
+            padding: 10px;
+            background-color: #34495e;
             border-radius: 5px;
             margin: 20px auto;
+        }
+
+        /* Adjust tile size based on board size */
+        .size-3 {
+            grid-template-columns: repeat(3, 80px);
+            grid-template-rows: repeat(3, 80px);
+        }
+
+        .size-4 {
+            grid-template-columns: repeat(4, 60px);
+            grid-template-rows: repeat(4, 60px);
+        }
+
+        .size-5 {
+            grid-template-columns: repeat(5, 48px);
+            grid-template-rows: repeat(5, 48px);
+        }
+
+        .size-3 .tile {
+            font-size: 2em;
+        }
+
+        .size-4 .tile {
+            font-size: 1.5em;
+        }
+
+        .size-5 .tile {
+            font-size: 1.2em;
         }
 
         .tile {
             background-color: #4CAF50;
             border: none;
             color: white;
-            font-size: 24px;
             font-weight: bold;
             cursor: pointer;
             display: flex;
@@ -65,7 +112,6 @@
             font-size: 16px;
             cursor: pointer;
             border-radius: 5px;
-            margin-top: 20px;
         }
 
         button#new-game:hover {
@@ -82,10 +128,17 @@
 <body>
     <div class="game-container">
         <h1>Slide Puzzle</h1>
+        <div class="game-controls">
+            <select id="difficulty">
+                <option value="3">Easy (3×3)</option>
+                <option value="4">Medium (4×4)</option>
+                <option value="5">Hard (5×5)</option>
+            </select>
+            <button id="new-game">New Game</button>
+        </div>
         <div id="moves-counter">Moves: <span id="moves">0</span></div>
         <div id="win-message" style="display: none; color: #e74c3c; font-size: 1.2em; margin: 10px 0; font-weight: bold;"></div>
         <div class="puzzle-board" id="puzzle-board"></div>
-        <button id="new-game">New Game</button>
     </div>
     <script src="js/game.js"></script>
 </body>
