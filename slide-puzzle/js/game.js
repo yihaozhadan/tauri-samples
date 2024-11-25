@@ -9,6 +9,9 @@ class SlidePuzzle {
         this.winMessageElement = document.getElementById('win-message');
         this.newGameButton = document.getElementById('new-game');
         this.difficultySelect = document.getElementById('difficulty');
+        this.helpButton = document.getElementById('help-button');
+        this.instructions = document.getElementById('instructions');
+        this.setupEventListeners();
         this.initializeGame();
     }
 
@@ -26,7 +29,6 @@ class SlidePuzzle {
         this.shuffleBoard();
         this.renderBoard();
         this.updateMovesDisplay();
-        this.setupEventListeners();
     }
 
     updateBoardSize() {
@@ -151,13 +153,23 @@ class SlidePuzzle {
     }
 
     setupEventListeners() {
-        this.newGameButton.addEventListener('click', () => {
-            this.initializeGame();
-        });
+        // Remove existing event listeners if any
+        this.newGameButton.removeEventListener('click', this.handleNewGame);
+        this.difficultySelect.removeEventListener('change', this.handleDifficultyChange);
+        this.helpButton.removeEventListener('click', this.handleHelpToggle);
 
-        this.difficultySelect.addEventListener('change', () => {
-            this.initializeGame();
-        });
+        // Add event listeners
+        this.handleNewGame = () => this.initializeGame();
+        this.handleDifficultyChange = () => this.initializeGame();
+        this.handleHelpToggle = () => {
+            const isVisible = this.instructions.style.display === 'block';
+            this.instructions.style.display = isVisible ? 'none' : 'block';
+            this.helpButton.textContent = isVisible ? 'Show Help' : 'Hide Help';
+        };
+
+        this.newGameButton.addEventListener('click', this.handleNewGame);
+        this.difficultySelect.addEventListener('change', this.handleDifficultyChange);
+        this.helpButton.addEventListener('click', this.handleHelpToggle);
     }
 }
 
