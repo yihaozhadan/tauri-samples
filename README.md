@@ -19,6 +19,12 @@ A classic card matching game that demonstrates:
 - Responsive design principles
 - Basic animations and transitions
 
+### Markdown Editor
+A markdown editor application showcasing:
+- Cross-platform compatibility
+- Markdown parsing and rendering
+- File management and navigation
+
 ### Calculator
 A desktop calculator application showcasing:
 - Basic UI layout and design
