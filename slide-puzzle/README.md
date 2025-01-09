@@ -18,31 +18,26 @@ A classic sliding puzzle game built with Tauri 2.0, featuring multiple difficult
 ## Prerequisites
 
 - [Rust](https://www.rust-lang.org/tools/install)
-- [Node.js](https://nodejs.org/)
-- [Tauri CLI](https://tauri.app/v1/guides/getting-started/prerequisites)
 
-## Installation
+## Development
 
-1. Clone the repository:
+This project is built with Tauri 2.0. To get started with development:
+
+1. Clone the repository
+2. Run the development server:
+   ```bash
+   cargo tauri dev
+   ```
+
+## Building
+
+To create a production build:
+
 ```bash
-git clone https://github.com/yihaozhadan/tauri-samples.git
-cd slide-puzzle
+cargo tauri build
 ```
 
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Run the development version:
-```bash
-npm run tauri dev
-```
-
-4. Build for production:
-```bash
-npm run tauri build
-```
+This will create platform-specific binaries in the `target/release` directory.
 
 ## How to Play
 
@@ -53,19 +48,10 @@ npm run tauri build
 5. Track your progress with the moves counter
 6. Click "Show Help" anytime to view the game instructions
 
-## Development
-
-The project is structured as follows:
-
-- `src-tauri/`: Rust backend code
-- `index.html`: Main game interface
-- `js/game.js`: Game logic implementation
-- `styles/`: CSS styling
-
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License.
